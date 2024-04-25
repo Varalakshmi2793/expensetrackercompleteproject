@@ -3,38 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
+    <title>signup</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <nav>
-        <h3>Expense Tracker</h3>
-        <ul>
-            <li><a href="">Home</a></li>
-            <li><a href="">Login</a></li>
-            <li><a href="">signup</a></li>
-        </ul>
-    </nav>
-    <div class="container mt-4">
-        <div class="card">
-            <div class ="card-header">
-                Sign Up Form
-            </div>
-        </div>
-            <form action="/auth/signup" method="post">
-                <div class="formgrp">
-                    <label for="name">User Name:</label>
+        <label class="logo"> Expense Tracker </label>
+    <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/signup">signup</a></li>
+    </ul>
+    </nav> <div class="container">
+        <div class="text"> Signup Form</div>
+
+        <form action="/auth/signup" method="post">
+            <div class="formgrp">
+                   <label for="name">User Name:</label>
                     <input type="text" class="formcontrol" id="name" name="name">
                 </div> 
-                <div class="formgrp">
-                    <label for="password">Password:</label>
-                    <input type="password" class="formcontrol" id="password" name="password">
-                </div>
+                
                 <div class="formgrp">
                     <label for="email">Email:</label>
                     <input type="email" class="formcontrol" id="email" name="email">
                     </div>
+                    <div class="formgrp">
+                        <label for="password">Password:</label>
+                        <input type="password" class="formcontrol" id="password" name="password">
+                    </div>
+                    <!-- <div class="formgrp">
+                        <label for="passwordconfirm">Confirm Password:</label>
+                        <input type="password" class="formcontrol" id="passwordconfirm" name="password">
+                    </div> -->
                  <button type="submit" class="btn">Sign up</button>   
             </form>
     </div>
+    <script>
+        // document.getElementById('signup-form').addEventListener('submit', async (event) => {
+        //     event.preventDefault();
+        //     const formData = new FormData(event.target);
+        //     const userData = {
+        //         username: formData.get('username'),
+        //         email: formData.get('email'),
+        //         password: formData.get('password')
+        //     };
+        //     try {
+        //         const response = await fetch('/signup', {
+        //             method: 'POST',
+        //             headers: {
+        //                 'Content-Type': 'application/json'
+        //             },
+        //             body: JSON.stringify(userData)
+        //         });
+        //         const data = await response.json();
+        //         console.log(data);
+        //     } catch (error) {
+        //         console.error('Error:', error);
+        //     }
+        // });
+    </script>
 </body>
 </html>
