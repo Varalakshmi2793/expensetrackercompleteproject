@@ -23,35 +23,48 @@ app.get('/signup', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'signup.html'));
 });
 app.post('/auth/signup', async (req, res) => {
-    console.log(req.body);
-    
     try {
-        // Check if the email already exists in the database
-        const existingUser = await sequelize.findOne({ where: { email: req.body.email } });
+        const { username, email, password } = req.body;
+
+        // Check if the email already exists
+        const existingUser = await sequelize.findOne({ where: { email } });
         if (existingUser) {
-            return res.status(400).send('Email already exists');
+            // Email already exists, send a 403 response with an error message
+            return res.status(403).json({ error: 'Email already exists' });
         }
 
-        // Create a new user with signup data
-        const newUser = await sequelize.create({
-            username: req.body.name,
-            email: req.body.email,
-            password: req.body.password
-        });
+        // Create the new user
+        const newUser = await sequelize.create({ username, email, password });
 
-        console.log('New user created:', newUser);
-        res.send("User signed up successfully");
+        // Send a success response
+        res.status(200).json({ message: 'User created successfully', user: newUser });
     } catch (error) {
-        console.error('Error signing up:', error);
-        res.status(500).send('Internal server error');
+        console.error('Error creating user:', error);
+        res.status(500).json({ error: 'Failed to create user' });
     }
 });
+
 
 app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
-app.post('/auth/login',(req, res) => { 
-    console.log(req.body);
-    res.send("Log in sucessfully")
+
+app.post('/auth/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        const user = await sequelize.findOne({ where: {email: email } });
+
+        if (!user || user.password !== password || !password) {
+            return res.status(403).json({ error: 'Error: request failed with status code' });
+        }
+
+        res.status(200).json({ message: 'Login successful', user });
+    } catch (error) {
+        console.error('Error during login:', error);
+        res.status(500).json({ error: 'Failed to login' });
+    }
 });
-app.listen(1090);
+    
+
+app.listen(1099);

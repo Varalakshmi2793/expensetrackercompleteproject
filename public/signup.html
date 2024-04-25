@@ -16,51 +16,67 @@
     </ul>
     </nav> <div class="container">
         <div class="text"> Signup Form</div>
-
-        <form action="/auth/signup" method="post">
+        <form id="signup-form" action="/auth/signup" method="post">
             <div class="formgrp">
-                   <label for="name">User Name:</label>
-                    <input type="text" class="formcontrol" id="name" name="name">
-                </div> 
-                
-                <div class="formgrp">
-                    <label for="email">Email:</label>
-                    <input type="email" class="formcontrol" id="email" name="email">
-                    </div>
-                    <div class="formgrp">
-                        <label for="password">Password:</label>
-                        <input type="password" class="formcontrol" id="password" name="password">
-                    </div>
-                    <!-- <div class="formgrp">
-                        <label for="passwordconfirm">Confirm Password:</label>
-                        <input type="password" class="formcontrol" id="passwordconfirm" name="password">
-                    </div> -->
-                 <button type="submit" class="btn">Sign up</button>   
-            </form>
-    </div>
-    <script>
-        // document.getElementById('signup-form').addEventListener('submit', async (event) => {
-        //     event.preventDefault();
-        //     const formData = new FormData(event.target);
-        //     const userData = {
-        //         username: formData.get('username'),
-        //         email: formData.get('email'),
-        //         password: formData.get('password')
-        //     };
-        //     try {
-        //         const response = await fetch('/signup', {
-        //             method: 'POST',
-        //             headers: {
-        //                 'Content-Type': 'application/json'
-        //             },
-        //             body: JSON.stringify(userData)
-        //         });
-        //         const data = await response.json();
-        //         console.log(data);
-        //     } catch (error) {
-        //         console.error('Error:', error);
-        //     }
-        // });
-    </script>
+                <label for="name">User Name:</label>
+                <input type="text" class="formcontrol" id="name" name="name">
+            </div>
+            <div class="formgrp">
+                <label for="email">Email:</label>
+                <input type="email" class="formcontrol" id="email" name="email">
+            </div>
+            <div class="formgrp">
+                <label for="password">Password:</label>
+                <input type="password" class="formcontrol" id="password" name="password">
+            </div>
+            <div id="message" style="color: rgb(52, 3, 3); display: none;"></div> 
+            <button type="submit" class="btn">Sign up</button>
+            <div class="signupform">
+                Existing user? <a href="/login">Login</a>
+            </div> 
+        </form>
+        
+        <script>
+            document.getElementById('signup-form').addEventListener('submit', async (event) => {
+                event.preventDefault(); 
+        
+                const formData = new FormData(event.target);
+                const userData = {
+                    username: formData.get('name'), 
+                    email: formData.get('email'),
+                    password: formData.get('password')
+                };
+        
+                try {
+                    const response = await fetch('/auth/signup', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(userData)
+                    });
+        
+                    if (response.ok) {
+                        document.getElementById('message').textContent = 'User signed up successfully'; 
+                        document.getElementById('message').style.color = 'brown'; 
+                        document.getElementById('message').style.display = 'block'; 
+                        return;
+                       
+                    }
+                    else{
+                        const errorMessage = 'Error: request failed with status code ' + response.status; 
+                        document.getElementById('message').textContent = errorMessage; 
+                        document.getElementById('message').style.display = 'block'; 
+                        
+                    }
+        
+                    const data = await response.json();
+                    console.log(data);
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            });
+        </script>
+        
 </body>
-</html>
+</html>   
