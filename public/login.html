@@ -64,7 +64,9 @@
                 });
     
                 if (!response.ok) {
-                    const errorMessage = 'username or password invalid' + response.status; 
+                    
+                    const responseData = await response.json(); 
+                    const errorMessage = responseData.error +': ' +response.status; 
                     document.getElementById('message').textContent = errorMessage;
                     document.getElementById('message').style.display = 'block';
                     return;

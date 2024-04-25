@@ -55,8 +55,12 @@ app.post('/auth/login', async (req, res) => {
 
         const user = await sequelize.findOne({ where: {email: email } });
 
-        if (!user || user.password !== password || !password) {
-            return res.status(403).json({ error: 'Error: request failed with status code' });
+        if (!user ) {
+            return res.status(404).json({ error: 'user not found' });
+        }
+        else if(user.password !== password)
+        {
+            return res.status(401).json({ error: 'user not authorised' });
         }
 
         res.status(200).json({ message: 'Login successful', user });
