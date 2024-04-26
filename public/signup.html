@@ -57,6 +57,7 @@
                     });
         
                     if (response.ok) {
+                        document.getElementById('signup-form').reset();
                         document.getElementById('message').textContent = 'User signed up successfully'; 
                         document.getElementById('message').style.color = 'brown'; 
                         document.getElementById('message').style.display = 'block'; 
@@ -64,6 +65,7 @@
                        
                     }
                     else{
+                        document.getElementById('signup-form').reset();
                         const errorMessage = 'Error: request failed with status code ' + response.status; 
                         document.getElementById('message').textContent = errorMessage; 
                         document.getElementById('message').style.display = 'block'; 
