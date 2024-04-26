@@ -4,25 +4,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>login</title>
+    <title>Login</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-        <nav>
-            <label class="logo"> Expense Tracker </label>
+    <nav>
+        <label class="logo">Expense Tracker</label>
         <ul>
             <li><a href="/">Home</a></li>
             <li><a href="/login">Login</a></li>
-            <li><a href="/signup">signup</a></li>
+            <li><a href="/signup">Signup</a></li>
         </ul>
-
-</nav>
+    </nav>
 
     <div class="container">
-        <div class="text"> User Login</div>
+        <div class="text">User Login</div>
 
-        <form action="/expense" method="post">
+        <form id="loginForm">
             <div class="formgrp">
                 <label for="email">Email:</label>
                 <input type="email" class="formcontrol" id="email" name="email">
@@ -35,54 +34,53 @@
                 <a href="/forgetpassword">Forget Password</a>
             </div>
             <div id="message" style="color: rgb(99, 14, 14); display: none;"></div>
-            <button type="submit" class="btn">Login In</button>
-            
+            <button type="submit" class="btn">Login</button>
             <div class="signupform">
                 Not a member? <a href="/signup">Signup now</a>
             </div>
         </form>
     </div>
 
-    </div>
     <script>
-        document.querySelector('form').addEventListener('submit', async (event) => {
-            event.preventDefault(); 
-    
+        document.getElementById('loginForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
             const formData = new FormData(event.target);
             const userData = {
                 email: formData.get('email'),
-                password: formData.get('password')
+                password: formData.get('password'),
             };
-    
+
             try {
-                const response = await fetch('/auth/login', {
+                const response = await fetch('/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(userData)
                 });
-    
+
                 if (!response.ok) {
-                    
-                    const responseData = await response.json(); 
-                    const errorMessage = responseData.error +': ' +response.status; 
+                    const responseData = await response.json();
+                    const errorMessage = responseData.error + ': ' + response.status;
                     document.getElementById('message').textContent = errorMessage;
                     document.getElementById('message').style.display = 'block';
                     return;
                 }
-                
-                alert("logged in successfully");
-                window.location.href = '/'; 
-    
+
                 const data = await response.json();
-                console.log(data); 
+                // Save the token to local storage
+                localStorage.setItem('token', data.token);
+
+                alert("Logged in successfully");
+                window.location.href = '/expense';
+
             } catch (error) {
                 console.error('Error:', error);
             }
         });
     </script>
-    
+
 </body>
 
 </html>

@@ -5,17 +5,15 @@ const path = require('path');
 const sequelize = require('./path/database');
 const loginrouter = require('./router/loginrouter');
 const expenserouter = require('./router/expenserouter');
+const User=require('./model/user');
+const Expense=require('./model/tracker');
 const cors = require('cors');
 
 app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
 app.use(express.static(path.join(__dirname, './public')));
-sequelize.sync().then(() => {
-    console.log('Database synced');
-}).catch(err => {
-    console.error('Error syncing database:', err);
-});
+
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'home.html'));
@@ -34,6 +32,13 @@ app.get('/expense', (req, res) => {
 });
 app.use(expenserouter);
 
-app.listen(6098, () => {
-    console.log('Server is running on port 1099');
+User.hasMany(Expense);
+Expense.belongsTo(User);
+
+sequelize.sync().then(() => {
+    app.listen(8180);
+}).catch(err => {
+    console.error('Error syncing database:', err);
 });
+
+

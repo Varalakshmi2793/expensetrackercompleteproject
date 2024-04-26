@@ -1,64 +1,40 @@
 const form = document.getElementById('form-control');
 const userlist = document.getElementById('list-id');
 
-window.addEventListener('load', async () => {
-    await updateuserdetails();
-});
-
-form.addEventListener('submit', async function(event){
-    event.preventDefault();
-        
-    const expenseamount = document.getElementById("expenseamount").value;
-    const description = document.getElementById("description").value;
-    const category = document.getElementById("choose_category").value;
-    
+// Function to fetch and display expenses
+async function updateuserdetails(token) {
     try {
-        const response=await fetch('/expense',{
-            method: 'POST',
+        userlist.innerHTML = '';
+
+        const response = await fetch('/expense/addexpense', {
             headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({expenseamount, description, category})
+                'Authorization': `Bearer ${token}`
+            }
         });
-
-        if (response.ok) {
-           form.reset();
-           
-        } else {
-            console.log("User details not submitted");
+        
+        if (!response.ok) {
+            throw new Error('Failed to fetch expenses');
         }
-    } catch (err) {
-        console.log(err);
-    }
-});
-
-async function updateuserdetails() {
-    try {
-        const response = await fetch('/expense');
+        
         const datas = await response.json();
+        
         datas.forEach(element => {
             const useritem = document.createElement('li');
             const usertext = document.createTextNode(`${element.expenseamount}, ${element.description}, ${element.category}`);
             useritem.appendChild(usertext);
-            userlist.appendChild(useritem);            
-          
-            const editbutton = document.createElement('button');
-            editbutton.textContent = "Edit";
-            editbutton.addEventListener('click', () => {
-                
-                editExpense(element.id);
-            });
-            useritem.appendChild(editbutton);
+            userlist.appendChild(useritem);        
 
-      
             const delbutton = document.createElement('button');
             delbutton.textContent = "Delete";
             delbutton.addEventListener('click', async () => {
                 try {
-                    await fetch(`/expense/${element.id}`, {
-                        method: 'DELETE'
+                    await fetch(`/expense/addexpense/${element.id}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
                     });
-                    
+                    await updateuserdetails(token); // Refresh the list after deletion 
                 } catch (error) {
                     console.log(error);
                 }
@@ -71,23 +47,38 @@ async function updateuserdetails() {
     }
 }
 
-async function editExpense(id, newData) {
+// Call updateuserdetails function when the page loads
+window.addEventListener('load', async () => {
+    const token = localStorage.getItem('token'); // Retrieve token from local storage
+    await updateuserdetails(token); // Pass token to the function
+});
+
+form.addEventListener('submit', async function(event){
+    event.preventDefault();
+        
+    const expenseamount = document.getElementById("expenseamount").value;
+    const description = document.getElementById("description").value;
+    const category = document.getElementById("choose_category").value;
+    
     try {
-        const response = await fetch(`/expense/${id}`, {
-            method: 'PUT',
+        const token = localStorage.getItem('token'); // Retrieve token from local storage
+        
+        const response = await fetch('/expense/addexpense', {
+            method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify(newData)
+            body: JSON.stringify({ expenseamount, description, category })
         });
 
         if (response.ok) {
-            console.log("Expense updated successfully");
-            await updateuserdetails();
+            form.reset();
+            await updateuserdetails(token); // Refresh the list after adding a new expense
         } else {
-            console.log("Failed to update expense");
+            console.log("Expense not submitted successfully");
         }
     } catch (err) {
         console.log(err);
     }
-}
+});

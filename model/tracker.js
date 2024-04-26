@@ -20,8 +20,3 @@ const tracker=sequelize.define('expenseTracker',{
 
 module.exports=tracker;
 
-sequelize.sync().then(() => {
-    console.log('Database synced');
-}).catch(err => {
-    console.error('Error syncing database:', err);
-});
