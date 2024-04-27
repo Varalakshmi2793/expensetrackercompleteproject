@@ -75,7 +75,6 @@ async function updateuserdetails() {
         console.log(error);
     }
 }
-
 document.getElementById('razorpaybtn').onclick = async function (e) {
     const token = localStorage.getItem('token');
     const headers = { "Authorization": token };
@@ -84,28 +83,45 @@ document.getElementById('razorpaybtn').onclick = async function (e) {
         const response = await fetch('/purchase/premium', { headers });
         if (response.ok) {
             const data = await response.json();
-            const options = {
-                "key": data.key_id,
-                "order_id": data.order.id,
-                "handler": async function (response) {
-                    await fetch('/purchase/transaction', {
-                        method: 'POST',
-                        headers: { "Authorization": token },
-                        body: JSON.stringify({
-                            order_id: options.order_id,
-                            payment_id: response.razorpay_payment_id,
-                        })
-                    });
-                    alert("You are a Premium user now");
-                }
-            };
-            const rzpl = new Razorpay(options);
-            rzpl.open();
-            e.preventDefault();
-            rzpl.on('payment.failed', function (response) {
-                console.log(response);
-                alert("Something went wrong ");
-            });
+            if (data && data.order && data.order.id) {
+                const orderId = data.order.id;
+                console.log(orderId);
+                const options = {
+                    "key": data.key_id,
+                    "order_id": orderId,
+                    "handler": async function (response) {
+                        try {
+                            const transactionResponse = await fetch('/purchase/transaction', {
+                                method: 'POST',
+                                headers: { "Authorization": token, "Content-Type": "application/json" },
+                                body: JSON.stringify({
+                                    order_id: orderId,
+                                    payment_id: response.razorpay_payment_id,
+                                })
+                            });
+                            if (transactionResponse.ok) {
+                                alert("You are a Premium user now");
+                            } else {
+                                console.error('Transaction failed:', transactionResponse.statusText);
+                                alert("Transaction failed");
+                            }
+                        } catch (transactionError) {
+                            console.error('Transaction error:', transactionError);
+                            alert("Transaction error occurred");
+                        }
+                    }
+                };
+                const rzpl = new Razorpay(options);
+                rzpl.open();
+                e.preventDefault();
+                rzpl.on('payment.failed', function (response) {
+                    console.log(response);
+                    alert("Payment failed");
+                });
+            } else {
+                console.error('Invalid response data:', data);
+                alert("Invalid response data");
+            }
         } else {
             console.error('Failed to fetch premium purchase:', response.statusText);
             alert("Failed to fetch premium purchase");
@@ -114,4 +130,4 @@ document.getElementById('razorpaybtn').onclick = async function (e) {
         console.error('Error:', error);
         alert("An error occurred");
     }
-}  
+}

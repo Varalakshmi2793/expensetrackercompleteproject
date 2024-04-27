@@ -14,7 +14,7 @@ exports.createPurchase = async (req, res) => {
 
         const order = await rzp.orders.create({ amount, currency });
 
-        await req.user.createOrder({ orderId: order.id, status: 'PENDING' });
+        await req.user.createOrder({ orderid: order.id, status: 'PENDING' });
 
         return res.status(201).json({ order, key_id: process.env.RAZORPAY_KEY_ID });
     } catch (error) {
@@ -26,14 +26,15 @@ exports.createPurchase = async (req, res) => {
 exports.transaction = async (req, res) => {
     try {
         const { payment_id, order_id } = req.body;
+        console.log(order_id);
 
-        const order = await Order.findOne({ where: { orderId: order_id } });
+        const order = await Order.findOne({ where: { orderid: order_id } });
 
         if (!order) {
             return res.status(404).json({ message: "Order not found" });
         }
 
-        await order.update({ paymentId: payment_id, status: 'SUCCESSFUL' });
+        await order.update({ paymentid: payment_id, status: 'SUCCESSFUL' });
 
         return res.status(202).json({ success: true, message: "Transaction successful" });
     } catch (error) {
