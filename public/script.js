@@ -7,16 +7,17 @@ window.addEventListener('load', async () => {
 
 form.addEventListener('submit', async function(event){
     event.preventDefault();
-
+    const token = localStorage.getItem('token');
     const expenseamount = document.getElementById("expenseamount").value;
     const description = document.getElementById("description").value;
     const category = document.getElementById("choose_category").value;
 
     try {
-        const response=await fetch('/expense/addexpense',{
+        const response=await fetch('/expense/addexpense', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                "Authorization": token
             },
             body: JSON.stringify({expenseamount, description, category})
         });
@@ -36,9 +37,9 @@ form.addEventListener('submit', async function(event){
 async function updateuserdetails() {
     try {
         const token = localStorage.getItem('token');
-        console.log(token);
+    
         const headers = { "Authorization": token };
-        console.log('Headers:', headers);
+   
         const response = await fetch('/expense/getexpense',{ headers});
         console.log(response);
         if(response.ok){const datas = await response.json();
@@ -55,8 +56,9 @@ async function updateuserdetails() {
                 delbutton.addEventListener('click', async () => {
                     try {
                         await fetch(`/expense/delexpense/${element.id}`, {
-                            method: 'DELETE'
-                        });
+                        method: 'DELETE', 
+                        headers: {"Authorization": token}
+                    });
     
                     } catch (error) {
                         console.log(error);

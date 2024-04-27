@@ -1,13 +1,16 @@
-const { where } = require('sequelize');
+
 const Tracker = require('../model/tracker');
 
 exports.createtracker = async (req, res) => {
     try {
         const { expenseamount, description, category } = req.body;
+        const  userId= req.user.id;
+        console.log('id--->', userId);
         const expensedetails = await Tracker.create({ 
             expenseamount,
             description,
-            category
+            category,
+           userId
         });
         res.status(201).json({ message: 'Expense created successfully', expense: expensedetails });
     } catch (err) {
@@ -29,8 +32,9 @@ exports.getallexpense = async (req, res) => {
 exports.deletetracker = async (req, res) => {
     try {
         const id = req.params.id;
+        const userId = req.user.id;
         const tracker = await Tracker.findByPk(id);
-        if (!tracker) {
+        if (!tracker|| tracker.userId !== userId) {
             return res.status(404).json({ message: 'Expense not found' });
         }
         await tracker.destroy();

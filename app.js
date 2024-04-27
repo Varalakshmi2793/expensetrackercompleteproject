@@ -36,7 +36,7 @@ User.hasMany(Expense);
 Expense.belongsTo(User);
 
 sequelize.sync().then(() => {
-    app.listen(1180);
+    app.listen(1280);
 }).catch(err => {
     console.error('Error syncing database:', err);
 });
