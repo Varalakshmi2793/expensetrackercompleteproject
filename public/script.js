@@ -41,7 +41,7 @@ async function updateuserdetails() {
         const headers = { "Authorization": token };
    
         const response = await fetch('/expense/getexpense',{ headers});
-        console.log(response);
+      
         if(response.ok){const datas = await response.json();
             datas.forEach(element => {
                 const useritem = document.createElement('li');
@@ -76,3 +76,42 @@ async function updateuserdetails() {
     }
 }
 
+document.getElementById('razorpaybtn').onclick = async function (e) {
+    const token = localStorage.getItem('token');
+    const headers = { "Authorization": token };
+    console.log(headers)
+    try {
+        const response = await fetch('/purchase/premium', { headers });
+        if (response.ok) {
+            const data = await response.json();
+            const options = {
+                "key": data.key_id,
+                "order_id": data.order.id,
+                "handler": async function (response) {
+                    await fetch('/purchase/transaction', {
+                        method: 'POST',
+                        headers: { "Authorization": token },
+                        body: JSON.stringify({
+                            order_id: options.order_id,
+                            payment_id: response.razorpay_payment_id,
+                        })
+                    });
+                    alert("You are a Premium user now");
+                }
+            };
+            const rzpl = new Razorpay(options);
+            rzpl.open();
+            e.preventDefault();
+            rzpl.on('payment.failed', function (response) {
+                console.log(response);
+                alert("Something went wrong ");
+            });
+        } else {
+            console.error('Failed to fetch premium purchase:', response.statusText);
+            alert("Failed to fetch premium purchase");
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert("An error occurred");
+    }
+}  
