@@ -1,8 +1,8 @@
 const express = require('express');
+const controller = require('../controller/logincontroller');
 const router = express.Router();
-const { signup, login } = require('../controller/logincontroller');
 
-router.post('/signup', signup);
-router.post('/login', login);
+router.post('/signup', controller.signupform);
+router.post('/login', controller.loginform);
 
-module.exports = router;
+module.exports = router; // Corrected export statement

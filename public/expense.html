@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>signup</title>
+    <title>Expense Tracker</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    
     <nav>
         <label class="logo"> Expense Tracker </label>
     <ul>
@@ -14,17 +15,17 @@
         <li><a href="/login">Login</a></li>
         <li><a href="/signup">signup</a></li>
     </ul>
-    </nav> 
-        <div class="text"> Adding Expense</div>
-        <form id="form-control" action="/expense/addexpense" method="post">
-        
+
+</nav>
+    <form id="form-control" action="/expense" method="post">
+       
         <label for="expenseamount">Choose ExpenseAmount:</label>
         <input type="number" name="expenseamount" id="expenseamount" required>
         <label for="description">Description:</label>
         <input type="text" name="description" id="description" required>
-        
+
         <label for="category">Choose Category:</label>
-            
+
         <select class="category" id="choose_category">
             <option value="movie">Movie</option>
             <option value="shopping">Shopping</option>
@@ -33,7 +34,6 @@
         </select>
         <button type="submit">Add Expense</button>
     </form>
-    
     <div>
         <ul id="list-id"></ul>
 
