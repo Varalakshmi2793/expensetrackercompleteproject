@@ -58,7 +58,9 @@ async function updateuserdetails() {
 
         if (response.ok) {
             const datas = await response.json();
+            userlist.innerHTML='<h2>Expense</h2>';
             datas.forEach(element => {
+                       
                 const useritem = document.createElement('li');
                 const usertext = document.createTextNode(`${element.expenseamount}, ${element.description}, ${element.category}`);
                 useritem.appendChild(usertext);
@@ -119,6 +121,9 @@ document.getElementById('razorpaybtn').onclick = async function (e) {
 
 
                             alert("you are a prmium user");
+                            document.getElementById('razorpaybtn').style.visibility = "hidden";
+                            document.getElementById('premiumMessage').textContent = "You are now a premium user";
+
                            
                             checkPremiumStatus();
                             
@@ -142,6 +147,7 @@ document.getElementById('razorpaybtn').onclick = async function (e) {
         } else {
             console.error('Failed to fetch premium purchase:', response.statusText);
             alert("Failed to fetch premium purchase");
+
            
         }
     } catch (error) {
@@ -159,7 +165,7 @@ async function fetchLeaderboard() {
             const leaderboardElement = document.getElementById('leaderboard');
             leaderboardElement.innerHTML = '<h2>Leaderboard</h2>';
             data.leaderboard.forEach((user) => {
-                leaderboardElement.innerHTML += `<p>Name: ${user.name}, Total Expense: ${user.total}</p>`;
+                leaderboardElement.innerHTML += `<p>Name --> ${ user.username } && Total Expense--> ${user.totalexpense}</p>`;
             });
         } else {
             console.error('Failed to fetch leaderboard:', response.statusText);
