@@ -1,33 +1,31 @@
 const User = require('../model/user');
 const Expense = require('../model/tracker');
+const sequelize = require('../path/database');
+const { Sequelize } = require('sequelize');
 
 exports.getLeaderboard = async (req, res) => {
     try {
         console.log('Fetching leaderboard data...');
-        const users = await User.findAll();
-        const expenses = await Expense.findAll();
-
-        console.log('Users:', users); // Log the users data
-        console.log('Expenses:', expenses);
-        
-        // Initialize userAggregatedExpenses with each user's total expense as 0
-        const userAggregatedExpenses = {};
-        users.forEach((user) => {
-            userAggregatedExpenses[user.id] = 0;
+        const usersleaderboard = await User.findAll({
+            attributes: [
+                'id',
+                'username',
+                [sequelize.fn('SUM', sequelize.col('expensetrackers.expenseamount')), 'total'] // Adjusted alias to match association
+            ],
+            include: [
+                {
+                    model: Expense,
+                    
+                    attributes: [] 
+                }
+            ],
+            group: ['User.id'], 
+            order: [[Sequelize.literal('total'), 'DESC']] 
         });
 
-        // Aggregate expenses for each user
-        expenses.forEach((expense) => {
-            userAggregatedExpenses[expense.userId] += expense.expenseamount;
-        });
+        console.log(usersleaderboard);
 
-        // Create leaderboard array with user names and total expenses
-        const leaderboard = users.map((user) => ({
-            name: user.username,
-            total: userAggregatedExpenses[user.id]
-        })).sort((a, b) => b.total - a.total);
-        
-        res.status(200).json({ success: true, leaderboard });
+        res.status(200).json({ success: true, leaderboard: usersleaderboard });
     } catch (err) {
         console.error(err);
         res.status(500).json({ success: false, message: 'Internal server error' });
