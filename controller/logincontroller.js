@@ -29,7 +29,7 @@ exports.loginform = async (req, res) => {
         if (!passwordMatch) {
             return res.status(401).json({ error: 'Incorrect email or password' });
         }
-        const token = jwt.sign({ userId: user.id }, 'secretkey');
+        const token = jwt.sign({ userId: user.id, name:user.name, ispremiumuser: user.ispremiumuser }, 'secretkey');
         user.lastLogin = new Date();
         await user.save();
         

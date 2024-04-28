@@ -33,9 +33,12 @@ exports.transaction = async (req, res) => {
         if (!order) {
             return res.status(404).json({ message: "Order not found" });
         }
-
+       
+       
+   
         await order.update({ paymentid: payment_id, status: 'SUCCESSFUL' });
-
+        await req.user.update({ ispremiumuser: true });
+               
         return res.status(202).json({ success: true, message: "Transaction successful" });
     } catch (error) {
         console.error(error);

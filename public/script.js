@@ -3,9 +3,23 @@ const userlist = document.getElementById('list-id');
 
 window.addEventListener('load', async () => {
     await updateuserdetails();
-});
+    await checkPremiumStatus();
+  });
+function parseJwt(token) {
+    try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
 
-form.addEventListener('submit', async function(event){
+        return JSON.parse(jsonPayload);
+    } catch (error) {
+        console.error('Error parsing JWT:', error);
+        return null;
+    }
+}
+form.addEventListener('submit', async function (event) {
     event.preventDefault();
     const token = localStorage.getItem('token');
     const expenseamount = document.getElementById("expenseamount").value;
@@ -13,18 +27,18 @@ form.addEventListener('submit', async function(event){
     const category = document.getElementById("choose_category").value;
 
     try {
-        const response=await fetch('/expense/addexpense', {
+        const response = await fetch('/expense/addexpense', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 "Authorization": token
             },
-            body: JSON.stringify({expenseamount, description, category})
+            body: JSON.stringify({ expenseamount, description, category })
         });
 
         if (response.ok) {
             console.log(response);
-           form.reset();
+            form.reset();
 
         } else {
             console.log("User details not submitted");
@@ -37,40 +51,38 @@ form.addEventListener('submit', async function(event){
 async function updateuserdetails() {
     try {
         const token = localStorage.getItem('token');
-    
+
         const headers = { "Authorization": token };
-   
-        const response = await fetch('/expense/getexpense',{ headers});
-      
-        if(response.ok){const datas = await response.json();
+
+        const response = await fetch('/expense/getexpense', { headers });
+
+        if (response.ok) {
+            const datas = await response.json();
             datas.forEach(element => {
                 const useritem = document.createElement('li');
                 const usertext = document.createTextNode(`${element.expenseamount}, ${element.description}, ${element.category}`);
                 useritem.appendChild(usertext);
-                userlist.appendChild(useritem);            
-    
-               
-    
+                userlist.appendChild(useritem);
                 const delbutton = document.createElement('button');
                 delbutton.textContent = "Delete";
                 delbutton.addEventListener('click', async () => {
                     try {
                         await fetch(`/expense/delexpense/${element.id}`, {
-                        method: 'DELETE', 
-                        headers: {"Authorization": token}
-                    });
-    
+                            method: 'DELETE',
+                            headers: { "Authorization": token }
+                        });
+
                     } catch (error) {
                         console.log(error);
                     }
                 });
-                useritem.appendChild(delbutton); 
-                userlist.appendChild(useritem); 
+                useritem.appendChild(delbutton);
+                userlist.appendChild(useritem);
             });
-        }else {
+        } else {
             console.error('Fetch request failed:', response.statusText);
         }
-        
+
     } catch (error) {
         console.log(error);
     }
@@ -98,13 +110,18 @@ document.getElementById('razorpaybtn').onclick = async function (e) {
                                     order_id: orderId,
                                     payment_id: response.razorpay_payment_id,
                                 })
+
                             });
-                            if (transactionResponse.ok) {
-                                alert("You are a Premium user now");
-                            } else {
-                                console.error('Transaction failed:', transactionResponse.statusText);
-                                alert("Transaction failed");
-                            }
+                            await fetch('/purchase/userstatus', {
+                                method: 'POST',
+                                headers: { "Authorization": token }
+                            });
+
+
+                            alert("you are a prmium user");
+                           
+                            checkPremiumStatus();
+                            
                         } catch (transactionError) {
                             console.error('Transaction error:', transactionError);
                             alert("Transaction error occurred");
@@ -125,9 +142,50 @@ document.getElementById('razorpaybtn').onclick = async function (e) {
         } else {
             console.error('Failed to fetch premium purchase:', response.statusText);
             alert("Failed to fetch premium purchase");
+           
         }
     } catch (error) {
         console.error('Error:', error);
         alert("An error occurred");
     }
+}  
+async function fetchLeaderboard() {
+    try {
+        const token= localStorage.getItem('token');
+        const response = await fetch('/api/leaderboard', {headers: { "Authorization": token }});
+        console.log(response);
+        if (response.ok) {
+            const data = await response.json();
+            const leaderboardElement = document.getElementById('leaderboard');
+            leaderboardElement.innerHTML = '<h2>Leaderboard</h2>';
+            data.leaderboard.forEach((user) => {
+                leaderboardElement.innerHTML += `<p>Name: ${user.name}, Total Expense: ${user.total}</p>`;
+            });
+        } else {
+            console.error('Failed to fetch leaderboard:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Error fetching leaderboard data:', error);
+    }
 }
+
+
+async function checkPremiumStatus() {
+    try {
+        const token = localStorage.getItem('token');
+        const decodedToken = parseJwt(token);
+
+        if (decodedToken.ispremiumuser) {
+            document.getElementById('razorpaybtn').style.visibility = "hidden";
+            document.getElementById('premiumMessage').textContent = "You are now a premium user";
+
+            const leaderboardButton = document.createElement('button');
+            leaderboardButton.textContent = 'Show Leaderboard';
+            leaderboardButton.onclick = fetchLeaderboard; 
+            document.getElementById('premiumMessage').appendChild(leaderboardButton);
+        }
+    } catch (err) {
+        console.log(err);
+    }
+}
+

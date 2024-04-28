@@ -7,9 +7,11 @@ const sequelize = require('./path/database');
 const loginrouter = require('./router/loginrouter');
 const expenserouter = require('./router/expenserouter');
 const purchaserouter = require('./router/purchase');
+const premium= require('./router/premium');
 const User=require('./model/user');
 const Expense=require('./model/tracker');
 const Order= require('./model/purchase');
+
 const cors = require('cors');
 
 app.use(express.urlencoded({ extended: false }));
@@ -33,9 +35,11 @@ app.get('/login', (req, res) => {
 app.get('/expense', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'expense.html'));
 });
+app.use(premium);
 app.use(loginrouter);
 app.use(expenserouter);
 app.use(purchaserouter);
+
 
 User.hasMany(Expense);
 Expense.belongsTo(User);
