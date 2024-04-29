@@ -15,7 +15,8 @@ const User=sequelize.define('user',{
         type: dataType.STRING,
         allowNull: false
     },
-    ispremiumuser: dataType.BOOLEAN
+    ispremiumuser: dataType.BOOLEAN,
+    totalexpense: dataType.DOUBLE
 });
 
 module.exports=User;

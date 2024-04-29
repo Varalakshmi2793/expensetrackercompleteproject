@@ -1,4 +1,4 @@
-// routes/leaderboard.js
+
 const express = require('express');
 const router = express.Router();
 const { getLeaderboard } = require('../controller/premiumcontroller');
