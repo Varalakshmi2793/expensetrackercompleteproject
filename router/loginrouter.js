@@ -5,4 +5,4 @@ const router = express.Router();
 router.post('/signup', controller.signupform);
 router.post('/login', controller.loginform);
 
-module.exports = router; // Corrected export statement
+module.exports = router; 
