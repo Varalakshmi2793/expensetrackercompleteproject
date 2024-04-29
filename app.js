@@ -8,6 +8,7 @@ const loginrouter = require('./router/loginrouter');
 const expenserouter = require('./router/expenserouter');
 const purchaserouter = require('./router/purchase');
 const premium= require('./router/premium');
+const forgetpass=require('./router/forgetpass');
 const User=require('./model/user');
 const Expense=require('./model/tracker');
 const Order= require('./model/purchase');
@@ -39,7 +40,10 @@ app.use(premium);
 app.use(loginrouter);
 app.use(expenserouter);
 app.use(purchaserouter);
-
+app.get('/forgetpassword', (req,res) =>{
+    res.sendFile(path.join(__dirname, 'public', 'forgetpassword.html'))
+})
+app.use(forgetpass);
 
 User.hasMany(Expense);
 Expense.belongsTo(User);
