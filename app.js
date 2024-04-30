@@ -13,7 +13,10 @@ const User=require('./model/user');
 const Expense=require('./model/tracker');
 const Order= require('./model/purchase');
 const password=require('./model/forgetpassword');
+<<<<<<< HEAD
 const fileUrl=require('./model/fileUrl');
+=======
+>>>>>>> 96a6eeb49bd73a14325de3b68195ea4a4e6c3975
 
 const cors = require('cors');
 
@@ -53,8 +56,11 @@ User.hasMany(Order);
 Order.belongsTo(User);
 User.hasMany(password);
 password.belongsTo(User);
+<<<<<<< HEAD
 User.hasMany(fileUrl);
 fileUrl.belongsTo(User);
+=======
+>>>>>>> 96a6eeb49bd73a14325de3b68195ea4a4e6c3975
 
 sequelize.sync().then(() => {
     app.listen(1280);

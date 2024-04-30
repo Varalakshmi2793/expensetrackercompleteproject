@@ -1,5 +1,6 @@
 const Tracker = require('../model/tracker');
 const sequelize= require('../path/database');
+<<<<<<< HEAD
 const S3service= require('../services/S3services');
 const UserServices= require('../services/userservices');
 const fileUrl = require('../model/fileUrl');
@@ -39,6 +40,8 @@ exports.fetchUrls = async (req, res) => {
     }
 };
 
+=======
+>>>>>>> 96a6eeb49bd73a14325de3b68195ea4a4e6c3975
 exports.createtracker = async (req, res) => {
     const t = await sequelize.transaction();
     try {
@@ -49,8 +52,15 @@ exports.createtracker = async (req, res) => {
         const expenseAmountNum = parseInt(expenseamount);
 
       
+<<<<<<< HEAD
         totalExpenseNum += expenseAmountNum;
   
+=======
+            totalExpenseNum += expenseAmountNum;
+  
+
+        console.log(totalExpenseNum); 
+>>>>>>> 96a6eeb49bd73a14325de3b68195ea4a4e6c3975
         const expensedetails = await Tracker.create({ 
             expenseamount,
             description,

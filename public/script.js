@@ -28,6 +28,7 @@
         const description = document.getElementById("description").value;
         const category = document.getElementById("choose_category").value;
 
+<<<<<<< HEAD
         try {
             const response = await fetch('/expense/addexpense', {
                 method: 'POST',
@@ -36,6 +37,36 @@
                     "Authorization": token
                 },
                 body: JSON.stringify({ expenseamount, description, category })
+=======
+        const headers = { "Authorization": token };
+
+        const response = await fetch('/expense/getexpense', { headers });
+
+        if (response.ok) {
+            const datas = await response.json();
+            userlist.innerHTML='<h2>Expense</h2>';
+            datas.forEach(element => {
+                       
+                const useritem = document.createElement('li');
+                const usertext = document.createTextNode(`${element.expenseamount}, ${element.description}, ${element.category}`);
+                useritem.appendChild(usertext);
+                userlist.appendChild(useritem);
+                const delbutton = document.createElement('button');
+                delbutton.textContent = "Delete";
+                delbutton.addEventListener('click', async () => {
+                    try {
+                        await fetch(`/expense/delexpense/${element.id}`, {
+                            method: 'DELETE',
+                            headers: { "Authorization": token }
+                        });
+
+                    } catch (error) {
+                        console.log(error);
+                    }
+                });
+                useritem.appendChild(delbutton);
+                userlist.appendChild(useritem);
+>>>>>>> 96a6eeb49bd73a14325de3b68195ea4a4e6c3975
             });
 
             if (response.ok) {
@@ -76,8 +107,22 @@
                                 headers: { "Authorization": token }
                             });
 
+<<<<<<< HEAD
                         } catch (error) {
                             console.log(error);
+=======
+
+                            alert("you are a prmium user");
+                            document.getElementById('razorpaybtn').style.visibility = "hidden";
+                            document.getElementById('premiumMessage').textContent = "You are now a premium user";
+
+                           
+                            checkPremiumStatus();
+                            
+                        } catch (transactionError) {
+                            console.error('Transaction error:', transactionError);
+                            alert("Transaction error occurred");
+>>>>>>> 96a6eeb49bd73a14325de3b68195ea4a4e6c3975
                         }
                     });
                     useritem.appendChild(delbutton);
@@ -86,6 +131,39 @@
             } else {
                 console.error('Fetch request failed:', response.statusText);
             }
+<<<<<<< HEAD
+=======
+        } else {
+            console.error('Failed to fetch premium purchase:', response.statusText);
+            alert("Failed to fetch premium purchase");
+
+           
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert("An error occurred");
+    }
+}  
+async function fetchLeaderboard() {
+    try {
+        const token= localStorage.getItem('token');
+        const response = await fetch('/api/leaderboard', {headers: { "Authorization": token }});
+        console.log(response);
+        if (response.ok) {
+            const data = await response.json();
+            const leaderboardElement = document.getElementById('leaderboard');
+            leaderboardElement.innerHTML = '<h2>Leaderboard</h2>';
+            data.leaderboard.forEach((user) => {
+                leaderboardElement.innerHTML += `<p>Name --> ${ user.username } && Total Expense--> ${user.totalexpense}</p>`;
+            });
+        } else {
+            console.error('Failed to fetch leaderboard:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Error fetching leaderboard data:', error);
+    }
+}
+>>>>>>> 96a6eeb49bd73a14325de3b68195ea4a4e6c3975
 
         } catch (error) {
             console.log(error);
