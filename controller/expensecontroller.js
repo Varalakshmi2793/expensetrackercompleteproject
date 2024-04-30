@@ -72,13 +72,35 @@ exports.createtracker = async (req, res) => {
 
 exports.getallexpense = async (req, res) => {
     try {
-        const expenses = await Tracker.findAll({where : {userId: req.user.id}});
-        res.json(expenses);
+        const userId = req.user.id;
+        const page = parseInt(req.query.page) || 1; 
+        const limit = parseInt(req.query.limit) || 10; 
+
+        
+        const offset = (page - 1) * limit;
+
+       
+        const { count, rows: expenses } = await Tracker.findAndCountAll({
+            where: { userId },
+            offset,
+            limit
+        });
+
+        
+        const totalPages = Math.ceil(count / limit);
+
+      
+        res.status(200).json({
+            expenses,
+            totalExpenses: count,
+            totalPages,
+            currentPage: page
+        });
     } catch (err) {
-        console.error(err);
+        console.error('Error fetching expenses:', err);
         res.status(500).json({ error: 'Failed to fetch expenses' });
     }
-};
+}
 
 exports.deletetracker = async (req, res) => {
     try {
