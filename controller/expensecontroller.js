@@ -2,6 +2,7 @@ const Tracker = require('../model/tracker');
 const sequelize= require('../path/database');
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 const S3service= require('../services/S3services');
 const UserServices= require('../services/userservices');
 const fileUrl = require('../model/fileUrl');
@@ -45,6 +46,8 @@ exports.fetchUrls = async (req, res) => {
 >>>>>>> 96a6eeb49bd73a14325de3b68195ea4a4e6c3975
 =======
 >>>>>>> 96a6eeb49bd73a14325de3b68195ea4a4e6c3975
+=======
+>>>>>>> 96a6eeb49bd73a14325de3b68195ea4a4e6c3975
 exports.createtracker = async (req, res) => {
     const t = await sequelize.transaction();
     try {
@@ -57,9 +60,12 @@ exports.createtracker = async (req, res) => {
       
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         totalExpenseNum += expenseAmountNum;
   
 =======
+=======
+>>>>>>> 96a6eeb49bd73a14325de3b68195ea4a4e6c3975
 =======
 >>>>>>> 96a6eeb49bd73a14325de3b68195ea4a4e6c3975
             totalExpenseNum += expenseAmountNum;
@@ -67,6 +73,9 @@ exports.createtracker = async (req, res) => {
 
         console.log(totalExpenseNum); 
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> 96a6eeb49bd73a14325de3b68195ea4a4e6c3975
+=======
 >>>>>>> 96a6eeb49bd73a14325de3b68195ea4a4e6c3975
 =======
 >>>>>>> 96a6eeb49bd73a14325de3b68195ea4a4e6c3975
