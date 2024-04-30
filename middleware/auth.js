@@ -7,6 +7,7 @@ const verifyToken = promisify(jwt.verify);
 const authenticateToken = async (req, res, next) => {
     try {
         const token = req.header('Authorization');
+        
         if (!token) {
             console.error('Token is missing from request headers');
             return res.sendStatus(401);
