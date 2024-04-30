@@ -18,7 +18,10 @@ const User=sequelize.define('user',{
     ispremiumuser: dataType.BOOLEAN,
     totalexpense: dataType.DOUBLE
 <<<<<<< HEAD
+<<<<<<< HEAD
     
+=======
+>>>>>>> 96a6eeb49bd73a14325de3b68195ea4a4e6c3975
 =======
 >>>>>>> 96a6eeb49bd73a14325de3b68195ea4a4e6c3975
 });

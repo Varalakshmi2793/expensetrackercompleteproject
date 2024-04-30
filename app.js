@@ -14,7 +14,10 @@ const Expense=require('./model/tracker');
 const Order= require('./model/purchase');
 const password=require('./model/forgetpassword');
 <<<<<<< HEAD
+<<<<<<< HEAD
 const fileUrl=require('./model/fileUrl');
+=======
+>>>>>>> 96a6eeb49bd73a14325de3b68195ea4a4e6c3975
 =======
 >>>>>>> 96a6eeb49bd73a14325de3b68195ea4a4e6c3975
 
@@ -57,8 +60,11 @@ Order.belongsTo(User);
 User.hasMany(password);
 password.belongsTo(User);
 <<<<<<< HEAD
+<<<<<<< HEAD
 User.hasMany(fileUrl);
 fileUrl.belongsTo(User);
+=======
+>>>>>>> 96a6eeb49bd73a14325de3b68195ea4a4e6c3975
 =======
 >>>>>>> 96a6eeb49bd73a14325de3b68195ea4a4e6c3975
 
