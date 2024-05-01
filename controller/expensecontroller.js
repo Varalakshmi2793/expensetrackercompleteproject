@@ -1,8 +1,5 @@
 const Tracker = require('../model/tracker');
 const sequelize= require('../path/database');
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 const S3service= require('../services/S3services');
 const UserServices= require('../services/userservices');
 const fileUrl = require('../model/fileUrl');
@@ -42,12 +39,6 @@ exports.fetchUrls = async (req, res) => {
     }
 };
 
-=======
->>>>>>> 96a6eeb49bd73a14325de3b68195ea4a4e6c3975
-=======
->>>>>>> 96a6eeb49bd73a14325de3b68195ea4a4e6c3975
-=======
->>>>>>> 96a6eeb49bd73a14325de3b68195ea4a4e6c3975
 exports.createtracker = async (req, res) => {
     const t = await sequelize.transaction();
     try {
@@ -58,27 +49,8 @@ exports.createtracker = async (req, res) => {
         const expenseAmountNum = parseInt(expenseamount);
 
       
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
         totalExpenseNum += expenseAmountNum;
   
-=======
-=======
->>>>>>> 96a6eeb49bd73a14325de3b68195ea4a4e6c3975
-=======
->>>>>>> 96a6eeb49bd73a14325de3b68195ea4a4e6c3975
-            totalExpenseNum += expenseAmountNum;
-  
-
-        console.log(totalExpenseNum); 
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> 96a6eeb49bd73a14325de3b68195ea4a4e6c3975
-=======
->>>>>>> 96a6eeb49bd73a14325de3b68195ea4a4e6c3975
-=======
->>>>>>> 96a6eeb49bd73a14325de3b68195ea4a4e6c3975
         const expensedetails = await Tracker.create({ 
             expenseamount,
             description,
@@ -100,14 +72,32 @@ exports.createtracker = async (req, res) => {
 
 exports.getallexpense = async (req, res) => {
     try {
-        const expenses = await Tracker.findAll({where : {userId: req.user.id}});
-        res.json(expenses);
+        const userId = req.user.id;
+        const page = parseInt(req.query.page) || 1; 
+        const limit = parseInt(req.query.limit) || 10; // Default limit is 10
+
+        const offset = (page - 1) * limit;
+
+        // Query to fetch expenses with pagination and limit
+        const { count, rows: expenses } = await Tracker.findAndCountAll({
+            where: { userId },
+            offset,
+            limit
+        });
+
+        const totalPages = Math.ceil(count / limit);
+
+        res.status(200).json({
+            expenses,
+            totalExpenses: count,
+            totalPages,
+            currentPage: page
+        });
     } catch (err) {
-        console.error(err);
+        console.error('Error fetching expenses:', err);
         res.status(500).json({ error: 'Failed to fetch expenses' });
     }
-};
-
+}
 exports.deletetracker = async (req, res) => {
     try {
         const t = await sequelize.transaction();
