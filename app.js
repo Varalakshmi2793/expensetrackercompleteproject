@@ -25,8 +25,10 @@ app.use(morgan('combined', {stream: accessLogStream}));
 
 const accessLogStream= fs.createWriteStream(path.join(__dirname, 'access.log'), {flags: 'a'});
 app.use(express.static(path.join(__dirname, './public')));
+app.use(morgan('combined', {stream: accessLogStream}));
 
 
+app.use(express.static(path.join(__dirname, './public')));
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'home.html'));
 });
