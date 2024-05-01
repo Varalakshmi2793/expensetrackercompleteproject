@@ -21,7 +21,7 @@ const helmet = require('helmet');
 app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
-app.use(morgan('combined', {stream: accessLogStream}));
+
 
 const accessLogStream= fs.createWriteStream(path.join(__dirname, 'access.log'), {flags: 'a'});
 app.use(express.static(path.join(__dirname, './public')));
