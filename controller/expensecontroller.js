@@ -74,22 +74,19 @@ exports.getallexpense = async (req, res) => {
     try {
         const userId = req.user.id;
         const page = parseInt(req.query.page) || 1; 
-        const limit = parseInt(req.query.limit) || 10; 
+        const limit = parseInt(req.query.limit) || 10; // Default limit is 10
 
-        
         const offset = (page - 1) * limit;
 
-       
+        // Query to fetch expenses with pagination and limit
         const { count, rows: expenses } = await Tracker.findAndCountAll({
             where: { userId },
             offset,
             limit
         });
 
-        
         const totalPages = Math.ceil(count / limit);
 
-      
         res.status(200).json({
             expenses,
             totalExpenses: count,
@@ -101,7 +98,6 @@ exports.getallexpense = async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch expenses' });
     }
 }
-
 exports.deletetracker = async (req, res) => {
     try {
         const t = await sequelize.transaction();

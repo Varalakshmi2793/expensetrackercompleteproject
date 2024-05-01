@@ -1,7 +1,7 @@
 const form = document.getElementById('form-control');
 const userlist = document.getElementById('list-id');
 let currentPage = 1;
-const expensesPerPage = 10;
+let expensesPerPage = 10;
 
 window.addEventListener('load', async () => {
     await updateuserdetails();
@@ -54,6 +54,8 @@ form.addEventListener('submit', async function (event) {
 
 async function updateuserdetails() {
     try {
+        expensesPerPage = parseInt(document.getElementById('expensesPerPage').value); // Get the selected value from the dropdown
+
         const token = localStorage.getItem('token');
         const headers = { "Authorization": token };
 
@@ -64,7 +66,7 @@ async function updateuserdetails() {
             const totalExpenses = data.totalExpenses;
             const totalPages = Math.ceil(totalExpenses / expensesPerPage);
 
-            userlist.innerHTML='<h2>Expense</h2>';
+            userlist.innerHTML = '<h2>Expense</h2>';
             data.expenses.forEach(element => {
                 const useritem = document.createElement('li');
                 const usertext = document.createTextNode(`${element.expenseamount}, ${element.description}, ${element.category}`);
@@ -117,7 +119,6 @@ async function updateuserdetails() {
                 paginationDiv.appendChild(nextButton);
             }
 
-           
         } else {
             console.error('Fetch request failed:', response.statusText);
         }
@@ -125,6 +126,7 @@ async function updateuserdetails() {
         console.log(error);
     }
 }
+
 async function checkPremiumStatus() {
     try {
         const token = localStorage.getItem('token');
