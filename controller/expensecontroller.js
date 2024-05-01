@@ -74,11 +74,10 @@ exports.getallexpense = async (req, res) => {
     try {
         const userId = req.user.id;
         const page = parseInt(req.query.page) || 1; 
-        const limit = parseInt(req.query.limit) || 10; // Default limit is 10
+        const limit = parseInt(req.query.limit) || 10; 
 
         const offset = (page - 1) * limit;
 
-        // Query to fetch expenses with pagination and limit
         const { count, rows: expenses } = await Tracker.findAndCountAll({
             where: { userId },
             offset,

@@ -3,18 +3,16 @@
 const AWS = require('aws-sdk');
 
 exports.uploadtoS3 = async (data, filename) => {
-    const BUCKET_NAME= 'expensesupload';
-    const IAM_USER_KEY='AKIA5FTZETITIESVRF5P';
-    const IAM_USER_SECRET= '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';
+    
     let s3bucket = new AWS.S3({
-        accessKeyId: IAM_USER_KEY,
-        secretAccessKey: IAM_USER_SECRET,
+        accessKeyId: Process.env.IAM_USER_KEY,
+        secretAccessKey: process.env.IAM_USER_SECRET,
             })
     
             return new Promise((resolve, reject) => {
                 s3bucket.createBucket(() => {
                     const params = {
-                        Bucket: BUCKET_NAME,
+                        Bucket: ProcessingInstruction.env.BUCKET_NAME,
                         Key: filename,
                         Body: data,
                         ACL: 'public-read'

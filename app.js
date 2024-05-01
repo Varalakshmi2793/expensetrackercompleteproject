@@ -13,19 +13,10 @@ const User=require('./model/user');
 const Expense=require('./model/tracker');
 const Order= require('./model/purchase');
 const password=require('./model/forgetpassword');
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 const fileUrl=require('./model/fileUrl');
-=======
->>>>>>> 96a6eeb49bd73a14325de3b68195ea4a4e6c3975
-=======
->>>>>>> 96a6eeb49bd73a14325de3b68195ea4a4e6c3975
-=======
->>>>>>> 96a6eeb49bd73a14325de3b68195ea4a4e6c3975
-
 const cors = require('cors');
-
+const helmet = require('helmet');
 app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
@@ -62,20 +53,13 @@ User.hasMany(Order);
 Order.belongsTo(User);
 User.hasMany(password);
 password.belongsTo(User);
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 User.hasMany(fileUrl);
 fileUrl.belongsTo(User);
-=======
->>>>>>> 96a6eeb49bd73a14325de3b68195ea4a4e6c3975
-=======
->>>>>>> 96a6eeb49bd73a14325de3b68195ea4a4e6c3975
-=======
->>>>>>> 96a6eeb49bd73a14325de3b68195ea4a4e6c3975
 
+app.use(helmet());
 sequelize.sync().then(() => {
-    app.listen(1280);
+    app.listen(process.env.PORT || 1280);
 }).catch(err => {
     console.error('Error syncing database:', err);
 });
