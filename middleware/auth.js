@@ -14,7 +14,7 @@ const authenticateToken = async (req, res, next) => {
         }
         
         console.log('Received token:', token);
-        const decoded = await verifyToken(token, 'secretkey');
+        const decoded = await verifyToken(token, process.env.SECRETKEY);
 
         console.log('Decoded token:', decoded);
         
